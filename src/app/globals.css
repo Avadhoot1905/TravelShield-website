@@ -3,13 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --ts-primary: #118B50; /* primary */
-  --ts-secondary: #5DB996; /* secondary */
-  --ts-accent: #E3F0AF; /* accent */
-  --ts-cream: #FBF6E9; /* light background */
-  --ts-green: #10B981; /* green zone */
-  --ts-orange: #F59E0B; /* orange zone */
-  --ts-red: #EF4444; /* red zone */
+  --ts-primary: #118b50; /* primary */
+  --ts-secondary: #5db996; /* secondary */
+  --ts-accent: #e3f0af; /* accent */
+  --ts-cream: #fbf6e9; /* light background */
+  --ts-green: #10b981; /* green zone */
+  --ts-orange: #f59e0b; /* orange zone */
+  --ts-red: #ef4444; /* red zone */
 }
 
 @theme inline {
@@ -38,6 +38,16 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
 }
 
 /* TravelShield dashboard styles */
@@ -50,28 +60,28 @@ body {
   flex-direction: column;
   gap: 12px;
   background: var(--ts-cream);
-  box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
-.ts-sidebar-title { 
-  font-size: 18px; 
-  font-weight: 700; 
+.ts-sidebar-title {
+  font-size: 18px;
+  font-weight: 700;
   color: var(--ts-primary);
   margin-bottom: 8px;
 }
 
-.ts-actions { 
-  display: flex; 
-  gap: 8px; 
+.ts-actions {
+  display: flex;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
-.ts-btn { 
-  padding: 10px 12px; 
-  border: 2px solid var(--ts-primary); 
-  background: var(--ts-accent); 
-  border-radius: 8px; 
-  cursor: pointer; 
+.ts-btn {
+  padding: 10px 12px;
+  border: 2px solid var(--ts-primary);
+  background: var(--ts-accent);
+  border-radius: 8px;
+  cursor: pointer;
   font-weight: 600;
   color: var(--ts-primary);
   transition: all 0.2s ease;
@@ -83,46 +93,47 @@ body {
   transform: translateY(-1px);
 }
 
-.ts-section { 
-  margin-top: 12px; 
+.ts-section {
+  margin-top: 12px;
   padding: 8px;
   background: white;
   border-radius: 8px;
   border: 1px solid var(--ts-secondary);
 }
 
-.ts-section-title { 
-  font-size: 14px; 
-  font-weight: 600; 
+.ts-section-title {
+  font-size: 14px;
+  font-weight: 600;
   color: var(--ts-primary);
   margin-bottom: 8px;
 }
 
-.ts-card { 
-  padding: 12px; 
-  border: 1px solid var(--ts-accent); 
-  border-radius: 8px; 
+.ts-card {
+  padding: 12px;
+  border: 1px solid var(--ts-accent);
+  border-radius: 8px;
   background: var(--ts-cream);
   color: var(--ts-primary);
   font-weight: 500;
 }
 
-.ts-list { 
-  margin-top: 8px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 6px; 
-  max-height: 240px; 
-  overflow: auto; 
+.ts-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow: auto;
 }
 
-.ts-list-item { 
-  padding: 10px; 
-  border: 1px solid var(--ts-accent); 
-  border-radius: 8px; 
-  display: flex; 
-  justify-content: space-between; 
+.ts-list-item {
+  padding: 10px;
+  border: 1px solid var(--ts-accent);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
   background: white;
+  color: var(--ts-primary);
   transition: all 0.2s ease;
 }
 
@@ -131,7 +142,7 @@ body {
   transform: translateX(2px);
 }
 
-.ts-muted { 
+.ts-muted {
   color: var(--ts-secondary);
   font-size: 12px;
 }
@@ -151,25 +162,25 @@ body {
 
 .ts-notification-strip:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .ts-notification-green {
-  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
   border-left-color: var(--ts-green);
-  color: #064E3B;
+  color: #064e3b;
 }
 
 .ts-notification-orange {
-  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
   border-left-color: var(--ts-orange);
-  color: #92400E;
+  color: #92400e;
 }
 
 .ts-notification-red {
-  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
   border-left-color: var(--ts-red);
-  color: #991B1B;
+  color: #991b1b;
 }
 
 .ts-notification-info {
@@ -196,7 +207,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +222,8 @@ body {
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .ts-modal-header {
@@ -249,7 +261,7 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .ts-detail-label {

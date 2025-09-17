@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 // Google Maps script loader and components
 import SimpleMapView, { Tourist } from "../../components/SimpleMapView";
@@ -10,35 +10,146 @@ import Sidebar from "../../components/Sidebar";
 type TouristLocal = Tourist;
 
 // Enhanced mock data generator with realistic tourist names
-function generateMockTourists(count: number, center: { lat: number; lng: number }): Tourist[] {
+function generateMockTourists(
+  count: number,
+  center: { lat: number; lng: number }
+): Tourist[] {
   const names = [
-    "Sarah Johnson", "Michael Chen", "Emma Rodriguez", "David Kim", "Lisa Wang",
-    "James Wilson", "Maria Garcia", "Robert Brown", "Anna Schmidt", "John Davis",
-    "Sophie Martin", "Ahmed Hassan", "Yuki Tanaka", "Carlos Silva", "Priya Patel",
-    "Alex Thompson", "Nina Petrov", "Hiroshi Yamamoto", "Isabella Rossi", "Marcus Johnson",
-    "Elena Popov", "Rajesh Kumar", "Jennifer Lee", "Mohammed Ali", "Catherine O'Connor",
-    "Thomas Mueller", "Aisha Khan", "Lucas Anderson", "Fatima Al-Zahra", "Daniel Kim",
-    "Sofia Rodriguez", "Arjun Patel", "Emily Watson", "Hassan Al-Mahmoud", "Grace Liu",
-    "Oliver Smith", "Zara Ahmed", "Liam O'Brien", "Aria Singh", "Noah Johnson",
-    "Maya Patel", "Ethan Brown", "Luna Garcia", "Mason Davis", "Chloe Wilson",
-    "Jackson Miller", "Ava Martinez", "Lucas Taylor", "Isabella Anderson", "William Thomas",
-    "Sophia Jackson", "Benjamin White", "Mia Harris", "Alexander Martin", "Charlotte Thompson",
-    "James Garcia", "Amelia Martinez", "Michael Robinson", "Harper Clark", "Daniel Rodriguez",
-    "Evelyn Lewis", "Matthew Lee", "Abigail Walker", "Anthony Hall", "Emily Allen",
-    "Christopher Young", "Elizabeth King", "Andrew Wright", "Samantha Lopez", "Joshua Hill",
-    "Madison Scott", "Ryan Green", "Ashley Adams", "Nicholas Baker", "Brittany Nelson",
-    "Tyler Carter", "Stephanie Mitchell", "Brandon Perez", "Nicole Roberts", "Jacob Turner",
-    "Rachel Phillips", "Zachary Campbell", "Lauren Parker", "Kevin Evans", "Megan Edwards",
-    "Justin Collins", "Kayla Stewart", "Tyler Sanchez", "Brittany Morris", "Austin Rogers",
-    "Samantha Reed", "Jordan Cook", "Taylor Morgan", "Hunter Bell", "Destiny Murphy",
-    "Cameron Bailey", "Jasmine Rivera", "Blake Cooper", "Sierra Richardson", "Connor Cox",
-    "Makayla Ward", "Landon Torres", "Paige Peterson", "Caleb Gray", "Jenna Ramirez",
-    "Isaac James", "Brooke Watson", "Nathan Brooks", "Kaitlyn Kelly", "Luke Sanders",
-    "Mackenzie Price", "Owen Bennett", "Haley Wood", "Gavin Barnes", "Jocelyn Ross",
-    "Landon Henderson", "Jade Coleman", "Eli Jenkins", "Molly Perry", "Carson Powell",
-    "Savannah Long", "Parker Patterson", "Faith Hughes", "Colton Flores", "Jillian Washington",
-    "Brayden Butler", "Kendall Simmons", "Jaxon Foster", "Makenzie Gonzales", "Preston Bryant",
-    "Jordyn Alexander", "Tristan Russell", "Payton Griffin", "Bryce Diaz", "Kylie Hayes"
+    "Sarah Johnson",
+    "Michael Chen",
+    "Emma Rodriguez",
+    "David Kim",
+    "Lisa Wang",
+    "James Wilson",
+    "Maria Garcia",
+    "Robert Brown",
+    "Anna Schmidt",
+    "John Davis",
+    "Sophie Martin",
+    "Ahmed Hassan",
+    "Yuki Tanaka",
+    "Carlos Silva",
+    "Priya Patel",
+    "Alex Thompson",
+    "Nina Petrov",
+    "Hiroshi Yamamoto",
+    "Isabella Rossi",
+    "Marcus Johnson",
+    "Elena Popov",
+    "Rajesh Kumar",
+    "Jennifer Lee",
+    "Mohammed Ali",
+    "Catherine O'Connor",
+    "Thomas Mueller",
+    "Aisha Khan",
+    "Lucas Anderson",
+    "Fatima Al-Zahra",
+    "Daniel Kim",
+    "Sofia Rodriguez",
+    "Arjun Patel",
+    "Emily Watson",
+    "Hassan Al-Mahmoud",
+    "Grace Liu",
+    "Oliver Smith",
+    "Zara Ahmed",
+    "Liam O'Brien",
+    "Aria Singh",
+    "Noah Johnson",
+    "Maya Patel",
+    "Ethan Brown",
+    "Luna Garcia",
+    "Mason Davis",
+    "Chloe Wilson",
+    "Jackson Miller",
+    "Ava Martinez",
+    "Lucas Taylor",
+    "Isabella Anderson",
+    "William Thomas",
+    "Sophia Jackson",
+    "Benjamin White",
+    "Mia Harris",
+    "Alexander Martin",
+    "Charlotte Thompson",
+    "James Garcia",
+    "Amelia Martinez",
+    "Michael Robinson",
+    "Harper Clark",
+    "Daniel Rodriguez",
+    "Evelyn Lewis",
+    "Matthew Lee",
+    "Abigail Walker",
+    "Anthony Hall",
+    "Emily Allen",
+    "Christopher Young",
+    "Elizabeth King",
+    "Andrew Wright",
+    "Samantha Lopez",
+    "Joshua Hill",
+    "Madison Scott",
+    "Ryan Green",
+    "Ashley Adams",
+    "Nicholas Baker",
+    "Brittany Nelson",
+    "Tyler Carter",
+    "Stephanie Mitchell",
+    "Brandon Perez",
+    "Nicole Roberts",
+    "Jacob Turner",
+    "Rachel Phillips",
+    "Zachary Campbell",
+    "Lauren Parker",
+    "Kevin Evans",
+    "Megan Edwards",
+    "Justin Collins",
+    "Kayla Stewart",
+    "Tyler Sanchez",
+    "Brittany Morris",
+    "Austin Rogers",
+    "Samantha Reed",
+    "Jordan Cook",
+    "Taylor Morgan",
+    "Hunter Bell",
+    "Destiny Murphy",
+    "Cameron Bailey",
+    "Jasmine Rivera",
+    "Blake Cooper",
+    "Sierra Richardson",
+    "Connor Cox",
+    "Makayla Ward",
+    "Landon Torres",
+    "Paige Peterson",
+    "Caleb Gray",
+    "Jenna Ramirez",
+    "Isaac James",
+    "Brooke Watson",
+    "Nathan Brooks",
+    "Kaitlyn Kelly",
+    "Luke Sanders",
+    "Mackenzie Price",
+    "Owen Bennett",
+    "Haley Wood",
+    "Gavin Barnes",
+    "Jocelyn Ross",
+    "Landon Henderson",
+    "Jade Coleman",
+    "Eli Jenkins",
+    "Molly Perry",
+    "Carson Powell",
+    "Savannah Long",
+    "Parker Patterson",
+    "Faith Hughes",
+    "Colton Flores",
+    "Jillian Washington",
+    "Brayden Butler",
+    "Kendall Simmons",
+    "Jaxon Foster",
+    "Makenzie Gonzales",
+    "Preston Bryant",
+    "Jordyn Alexander",
+    "Tristan Russell",
+    "Payton Griffin",
+    "Bryce Diaz",
+    "Kylie Hayes",
   ];
 
   const result: Tourist[] = [];
@@ -49,9 +160,9 @@ function generateMockTourists(count: number, center: { lat: number; lng: number 
     result.push({
       id: `tourist-${i}`,
       name: names[i % names.length],
-      location: { 
-        lat: center.lat + latOffset + (Math.random() - 0.5) * 0.5, 
-        lng: center.lng + lngOffset + (Math.random() - 0.5) * 0.5 
+      location: {
+        lat: center.lat + latOffset + (Math.random() - 0.5) * 0.5,
+        lng: center.lng + lngOffset + (Math.random() - 0.5) * 0.5,
       },
       lastUpdated: Date.now() - Math.floor(Math.random() * 3600000), // Within last hour
       direction: Math.random() * 360, // random direction 0-360 degrees
@@ -78,7 +189,7 @@ export default function DashboardPage() {
     setIsClient(true);
     const mockTourists = generateMockTourists(120, defaultCenter);
     setTourists(mockTourists);
-    console.log('Generated tourists:', mockTourists.length);
+    console.log("Generated tourists:", mockTourists.length);
   }, [defaultCenter]);
 
   // Load Google Maps JS API (v=weekly to ensure modern features)
@@ -91,37 +202,107 @@ export default function DashboardPage() {
     }
 
     // Check if script is already being loaded or exists
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+    const existingScript = document.querySelector(
+      'script[src*="maps.googleapis.com"]'
+    );
     if (existingScript) {
       return; // script already exists
     }
 
-    // If no API key, show a warning but still try to load with a demo key
-    if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') {
-      console.warn("No Google Maps API key found. Map may not load properly.");
-      setError("No Google Maps API key found. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to .env.local for full functionality.");
+    // Check if we have a valid API key
+    console.log("API Key check:", {
+      hasKey: !!GOOGLE_MAPS_API_KEY,
+      keyLength: GOOGLE_MAPS_API_KEY?.length,
+      keyValue: GOOGLE_MAPS_API_KEY?.substring(0, 10) + "...",
+    });
+
+    const hasValidApiKey =
+      GOOGLE_MAPS_API_KEY &&
+      GOOGLE_MAPS_API_KEY !== "YOUR_GOOGLE_MAPS_API_KEY" &&
+      GOOGLE_MAPS_API_KEY !== "demo" &&
+      GOOGLE_MAPS_API_KEY.length > 10;
+
+    if (!hasValidApiKey) {
+      console.warn("No valid Google Maps API key found. Map will not load.");
+      setError(
+        "No valid Google Maps API key found. Please add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to .env.local for full functionality."
+      );
+      setIsLoadingMaps(false);
+      setMapsLoaded(false);
+      return;
     }
 
     setIsLoadingMaps(true);
     const script = document.createElement("script");
-    // Use a demo key if no API key is provided (limited functionality)
-    const apiKey = GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== 'YOUR_GOOGLE_MAPS_API_KEY' 
-      ? GOOGLE_MAPS_API_KEY 
-      : 'AIzaSyBFw0Qbyq9zTFTd-tUY6dgsWcQfWzJjJjJ'; // This is a placeholder - won't work
-    
+    const apiKey = GOOGLE_MAPS_API_KEY;
+
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly&libraries=places`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      setIsLoadingMaps(false);
-      setMapsLoaded(true);
-      console.log("Google Maps loaded successfully");
+      console.log("Google Maps script loaded, checking if API is available...");
+      // Add a small delay to ensure the API is fully initialized
+      setTimeout(() => {
+        if (window.google && window.google.maps) {
+          setIsLoadingMaps(false);
+          setMapsLoaded(true);
+          setError(null);
+          console.log("Google Maps loaded successfully");
+
+          // Check for common API key issues
+          setTimeout(() => {
+            if (window.google && window.google.maps) {
+              try {
+                // Try to create a test map to check permissions
+                const testDiv = document.createElement("div");
+                testDiv.style.width = "1px";
+                testDiv.style.height = "1px";
+                testDiv.style.position = "absolute";
+                testDiv.style.top = "-1000px";
+                document.body.appendChild(testDiv);
+
+                const testMap = new window.google.maps.Map(testDiv, {
+                  center: { lat: 0, lng: 0 },
+                  zoom: 1,
+                });
+
+                setTimeout(() => {
+                  const hasTiles = testDiv.querySelector(
+                    'img[src*="maps.googleapis.com"]'
+                  );
+                  console.log("API Key permissions test:", {
+                    hasTiles: !!hasTiles,
+                  });
+                  if (!hasTiles) {
+                    console.warn(
+                      "API Key may not have proper permissions for Maps JavaScript API"
+                    );
+                    setError(
+                      "Google Maps API key may not have proper permissions. Please check your API key settings in Google Cloud Console."
+                    );
+                  }
+                  document.body.removeChild(testDiv);
+                }, 1000);
+              } catch (error) {
+                console.error("Error testing API key permissions:", error);
+              }
+            }
+          }, 2000);
+        } else {
+          console.warn("Google Maps script loaded but API not available");
+          setError("Google Maps API not available after loading");
+          setIsLoadingMaps(false);
+          setMapsLoaded(false);
+        }
+      }, 100);
     };
-    script.onerror = () => {
+    script.onerror = (error) => {
       setIsLoadingMaps(false);
       setMapsLoaded(false);
-      setError("Failed to load Google Maps. Using fallback view. Please check your API key or internet connection.");
-      console.error("Failed to load Google Maps script");
+      setError(
+        "Failed to load Google Maps. Please check your API key or internet connection."
+      );
+      console.error("Failed to load Google Maps script:", error);
     };
     document.head.appendChild(script);
   }, []);
@@ -129,12 +310,19 @@ export default function DashboardPage() {
   // No movement - tourists are static
 
   const handleFitToTourists = useCallback(() => {
-    if (!(window as any).google || !(window as any).google.maps) return;
+    if (!(window as unknown as { google?: { maps?: unknown } }).google?.maps)
+      return;
     if (tourists.length === 0) return;
     // We create a temporary bounds and let MapView handle it via custom event
     const bounds = new window.google.maps.LatLngBounds();
-    tourists.forEach((t) => bounds.extend(new window.google.maps.LatLng(t.location.lat, t.location.lng)));
-    const event = new CustomEvent("fit-to-bounds", { detail: { bounds: bounds.toJSON() } });
+    tourists.forEach((t) =>
+      bounds.extend(
+        new window.google.maps.LatLng(t.location.lat, t.location.lng)
+      )
+    );
+    const event = new CustomEvent("fit-to-bounds", {
+      detail: { bounds: bounds.toJSON() },
+    });
     window.dispatchEvent(event);
   }, [tourists]);
 
@@ -143,7 +331,9 @@ export default function DashboardPage() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
-        const event = new CustomEvent("pan-to", { detail: { center: { lat: latitude, lng: longitude } } });
+        const event = new CustomEvent("pan-to", {
+          detail: { center: { lat: latitude, lng: longitude } },
+        });
         window.dispatchEvent(event);
       },
       () => {},
@@ -153,20 +343,79 @@ export default function DashboardPage() {
 
   const handleLogout = useCallback(() => {
     // Clear any stored auth data
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
     // Redirect to login page
-    window.location.href = '/login';
+    window.location.href = "/login";
   }, []);
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 64px)", width: "100%" }}>
-      <Sidebar tourists={isClient ? tourists : []} onFitToTourists={handleFitToTourists} onLocateUser={handleLocateUser} onLogout={handleLogout} />
-      mapsLoaded ? (
-        <SimpleMapView tourists={isClient ? tourists : []} defaultCenter={defaultCenter} isLoadingMaps={isLoadingMaps} error={null} />
-      )
+    <div style={{ display: "flex", height: "100vh", width: "100%" }}>
+      <Sidebar
+        tourists={isClient ? tourists : []}
+        onFitToTourists={handleFitToTourists}
+        onLocateUser={handleLocateUser}
+        onLogout={handleLogout}
+      />
+      {mapsLoaded ? (
+        <SimpleMapView
+          tourists={isClient ? tourists : []}
+          defaultCenter={defaultCenter}
+          isLoadingMaps={isLoadingMaps}
+          error={error}
+        />
+      ) : (
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#6b7280",
+            background: "#f8fafc",
+            padding: "20px",
+          }}
+        >
+          <div style={{ fontSize: "24px", marginBottom: "8px" }}>🗺️</div>
+          <div
+            style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}
+          >
+            Loading Map...
+          </div>
+          <div style={{ fontSize: "14px", color: "#9ca3af" }}>
+            {isLoadingMaps
+              ? "Please wait while Google Maps loads"
+              : "Initializing map components..."}
+          </div>
+          {error && (
+            <div
+              style={{
+                marginTop: "16px",
+                background: "#fee2e2",
+                color: "#991b1b",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "2px solid #fecaca",
+                fontSize: "14px",
+                maxWidth: "400px",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
+                ⚠️ Map Error
+              </div>
+              <div>{error}</div>
+              <div
+                style={{ fontSize: "12px", marginTop: "8px", color: "#7f1d1d" }}
+              >
+                To fix this: Create a .env.local file with
+                NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_api_key
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
-
-

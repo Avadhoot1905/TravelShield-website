@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Tourist } from "./MapView";
+import type { Tourist } from "./SimpleMapView";
 
 type SidebarProps = {
   tourists: Tourist[];
@@ -17,15 +17,19 @@ export default function Sidebar(props: SidebarProps) {
     <aside className="ts-sidebar">
       <h2 className="ts-sidebar-title">Operations Dashboard</h2>
       <div className="ts-actions">
-        <button onClick={onFitToTourists} className="ts-btn">View Current Locations</button>
-        <button onClick={onLocateUser} className="ts-btn">My Location</button>
+        <button onClick={onFitToTourists} className="ts-btn">
+          View Current Locations
+        </button>
+        <button onClick={onLocateUser} className="ts-btn">
+          My Location
+        </button>
       </div>
       <div className="ts-section">
         <h3 className="ts-section-title">Notifications</h3>
-        <div 
-          className="ts-card" 
+        <div
+          className="ts-card"
           style={{ cursor: "pointer", transition: "all 0.2s ease" }}
-          onClick={() => window.location.href = "/notifications"}
+          onClick={() => (window.location.href = "/notifications")}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "var(--ts-accent)";
             e.currentTarget.style.transform = "translateX(2px)";
@@ -50,24 +54,33 @@ export default function Sidebar(props: SidebarProps) {
             </div>
           ))}
           {tourists.length > 20 && (
-            <div style={{ 
-              textAlign: "center", 
-              padding: "8px", 
-              color: "var(--ts-secondary)", 
-              fontSize: "12px" 
-            }}>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "8px",
+                color: "var(--ts-secondary)",
+                fontSize: "12px",
+              }}
+            >
               ... and {tourists.length - 20} more
             </div>
           )}
         </div>
       </div>
-      <div style={{ marginTop: 'auto', paddingTop: '16px' }}>
-        <button onClick={onLogout} className="ts-btn" style={{ width: '100%', background: '#dc2626', color: 'white', border: '2px solid #dc2626' }}>
+      <div style={{ marginTop: "auto", paddingTop: "16px" }}>
+        <button
+          onClick={onLogout}
+          className="ts-btn"
+          style={{
+            width: "100%",
+            background: "#dc2626",
+            color: "white",
+            border: "2px solid #dc2626",
+          }}
+        >
           Logout
         </button>
       </div>
     </aside>
   );
 }
-
-
