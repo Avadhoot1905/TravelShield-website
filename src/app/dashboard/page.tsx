@@ -9,6 +9,40 @@ import Sidebar from "../../components/Sidebar";
 // Types
 type TouristLocal = Tourist;
 
+//regions data
+// ...existing code...
+type DangerLevel = "low" | "medium" | "high";
+type RegionGeo = {
+  id: string;
+  name: string;
+  danger: DangerLevel;
+  geojson: GeoJSON.Feature<GeoJSON.Polygon>;
+};
+
+const mockRegions: RegionGeo[] = [
+  {
+    id: "region-1",
+    name: "Region A",
+    danger: "high",
+    geojson: {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [93.05, 25.65],
+            [93.15, 25.65],
+            [93.15, 25.55],
+            [93.05, 25.55],
+            [93.05, 25.65],
+          ],
+        ],
+      },
+    },
+  },
+  // Add more regions with different coordinates and danger levels
+];
 // Enhanced mock data generator with realistic tourist names
 function generateMockTourists(
   count: number,
@@ -363,6 +397,7 @@ export default function DashboardPage() {
           defaultCenter={defaultCenter}
           isLoadingMaps={isLoadingMaps}
           error={error}
+          regions={mockRegions}
         />
       ) : (
         <div
