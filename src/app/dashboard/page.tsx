@@ -18,7 +18,6 @@ type RegionGeo = {
   danger: DangerLevel;
   geojson: GeoJSON.Feature<GeoJSON.Polygon>;
 };
-
 const mockRegions: RegionGeo[] = [
   {
     id: "region-1",
@@ -43,6 +42,76 @@ const mockRegions: RegionGeo[] = [
   },
   // Add more regions with different coordinates and danger levels
 ];
+type HeatPoint = {
+  lat: number;
+  lng: number;
+  danger: number; // 0 (safe) to 1 (danger)
+};
+
+// Example: generate heat points from regions
+// ...existing code...
+function isPointInPolygon(
+  lat: number,
+  lng: number,
+  polygon: [number, number][]
+) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i][0],
+      yi = polygon[i][1];
+    const xj = polygon[j][0],
+      yj = polygon[j][1];
+    if (
+      yi > lng !== yj > lng &&
+      lat < ((xj - xi) * (lng - yi)) / (yj - yi) + xi
+    ) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+function generateHeatPointsForRegion(
+  region: RegionGeo,
+  count: number
+): HeatPoint[] {
+  const coords = region.geojson.geometry.coordinates[0];
+  const lats = coords.map(([lng, lat]) => lat);
+  const lngs = coords.map(([lng, lat]) => lng);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+
+  // Convert coords to [lat, lng] for isPointInPolygon
+  const polygonLatLng: [number, number][] = coords.map(([lng, lat]) => [
+    lat,
+    lng,
+  ]);
+
+  const points: HeatPoint[] = [];
+  let attempts = 0;
+  while (points.length < count && attempts < count * 10) {
+    const lat = minLat + Math.random() * (maxLat - minLat);
+    const lng = minLng + Math.random() * (maxLng - minLng);
+    if (isPointInPolygon(lat, lng, polygonLatLng)) {
+      points.push({
+        lat,
+        lng,
+        danger:
+          region.danger === "high" ? 1 : region.danger === "medium" ? 0.6 : 0.3,
+      });
+    }
+    attempts++;
+  }
+  return points;
+}
+
+// Generate more heat points for all regions
+const heatPoints: HeatPoint[] = mockRegions.flatMap(
+  (region) => generateHeatPointsForRegion(region, 20) // 20 points per region
+);
+// ...existing code...
 // Enhanced mock data generator with realistic tourist names
 function generateMockTourists(
   count: number,
@@ -270,7 +339,7 @@ export default function DashboardPage() {
     const script = document.createElement("script");
     const apiKey = GOOGLE_MAPS_API_KEY;
 
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly&libraries=places,visualization`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
@@ -397,7 +466,7 @@ export default function DashboardPage() {
           defaultCenter={defaultCenter}
           isLoadingMaps={isLoadingMaps}
           error={error}
-          regions={mockRegions}
+          heatPoints={heatPoints}
         />
       ) : (
         <div

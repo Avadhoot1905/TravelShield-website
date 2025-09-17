@@ -9,13 +9,10 @@ export type Tourist = {
   speed: number;
 };
 
-// ...existing code...
-type DangerLevel = "low" | "medium" | "high";
-type RegionGeo = {
-  id: string;
-  name: string;
-  danger: DangerLevel;
-  geojson: GeoJSON.Feature<GeoJSON.Polygon>;
+type HeatPoint = {
+  lat: number;
+  lng: number;
+  danger: number;
 };
 
 type Props = {
@@ -23,27 +20,20 @@ type Props = {
   defaultCenter: { lat: number; lng: number };
   isLoadingMaps: boolean;
   error: string | null;
-  regions?: RegionGeo[];
+  heatPoints: HeatPoint[];
 };
-
-function getDangerColor(danger: DangerLevel): string {
-  // Gradient: high (red) -> medium (orange) -> low (green)
-  if (danger === "high") return "rgba(239,68,68,0.6)"; // red
-  if (danger === "medium") return "rgba(245,158,66,0.6)"; // orange
-  return "rgba(34,197,94,0.6)"; // green
-}
 
 export default function SimpleMapView({
   tourists,
   defaultCenter,
   isLoadingMaps,
   error,
-  regions = [],
+  heatPoints,
 }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
-  const dataLayerRef = useRef<any>(null);
+  const heatmapRef = useRef<any>(null);
 
   useEffect(() => {
     if (!mapRef.current || !(window as any).google?.maps) return;
@@ -58,7 +48,7 @@ export default function SimpleMapView({
     });
   }, [defaultCenter]);
 
-  // Render tourists as markers
+  // Render tourists as markers (unchanged)
   useEffect(() => {
     if (!mapInstance.current || !(window as any).google?.maps) return;
     markersRef.current.forEach((m) => m.setMap(null));
@@ -81,56 +71,37 @@ export default function SimpleMapView({
     });
   }, [tourists]);
 
-  // Render regions as polygons with gradient color
+  // Render heatmap
   useEffect(() => {
-    if (!mapInstance.current || !(window as any).google?.maps) return;
+    if (!mapInstance.current || !(window as any).google?.maps?.visualization)
+      return;
 
-    // Remove previous data layer
-    if (dataLayerRef.current) {
-      dataLayerRef.current.setMap(null);
+    // Remove previous heatmap
+    if (heatmapRef.current) {
+      heatmapRef.current.setMap(null);
     }
-    const dataLayer = new window.google.maps.Data({ map: mapInstance.current });
-    dataLayerRef.current = dataLayer;
 
-    regions.forEach((region) => {
-      dataLayer.addGeoJson(region.geojson);
+    const google = window.google;
+    const heatmapData = heatPoints.map((p) => ({
+      location: new google.maps.LatLng(p.lat, p.lng),
+      weight: p.danger,
+    }));
+
+    heatmapRef.current = new google.maps.visualization.HeatmapLayer({
+      data: heatmapData,
+      dissipating: false,
+      radius: 100,
+      opacity: 0.7,
+      gradient: [
+        "rgba(0,255,0,0)", // green (safe)
+        "rgba(255,255,0,0.7)", // yellow
+        "rgba(255,165,0,0.8)", // orange
+        "rgba(255,0,0,1)", // red (danger)
+      ],
     });
 
-    dataLayer.setStyle((feature: any) => {
-      // Use danger property for color
-      const danger: DangerLevel =
-        regions.find(
-          (r) => r.geojson.properties?.id === feature.getProperty("id")
-        )?.danger || "low";
-      return {
-        fillColor: getDangerColor(danger),
-        fillOpacity: 0.6,
-        strokeColor: "#222",
-        strokeWeight: 2,
-      };
-    });
-
-    // Info window on click
-    dataLayer.addListener("click", (event: any) => {
-      const danger: DangerLevel =
-        regions.find(
-          (r) => r.geojson.properties?.id === event.feature.getProperty("id")
-        )?.danger || "low";
-      const info = new window.google.maps.InfoWindow({
-        content: `<div>
-          <strong>${event.feature.getProperty("name")}</strong><br/>
-          Danger: <span style="color:${getDangerColor(
-            danger
-          )};font-weight:bold">${danger.toUpperCase()}</span>
-        </div>`,
-        position: event.latLng,
-      });
-      info.open(mapInstance.current);
-      setTimeout(() => info.close(), 2500);
-    });
-  }, [regions]);
-
-  // ...fit-to-bounds and pan-to code unchanged...
+    heatmapRef.current.setMap(mapInstance.current);
+  }, [heatPoints]);
 
   return (
     <div style={{ flex: 1, position: "relative" }}>
@@ -139,7 +110,6 @@ export default function SimpleMapView({
         style={{
           width: "100%",
           height: "100%",
-          borderRadius: "0 0 0 0",
         }}
       />
       {error && (
