@@ -91,10 +91,20 @@ function generateHeatPointsForRegion(
 
   const points: HeatPoint[] = [];
   let attempts = 0;
-  while (points.length < count && attempts < count * 10) {
+  const minDistance = 0.01; // ~1km, adjust as needed
+
+  function isFarEnough(lat: number, lng: number) {
+    return points.every(
+      (p) =>
+        Math.sqrt(Math.pow(p.lat - lat, 2) + Math.pow(p.lng - lng, 2)) >
+        minDistance
+    );
+  }
+
+  while (points.length < count && attempts < count * 20) {
     const lat = minLat + Math.random() * (maxLat - minLat);
     const lng = minLng + Math.random() * (maxLng - minLng);
-    if (isPointInPolygon(lat, lng, polygonLatLng)) {
+    if (isPointInPolygon(lat, lng, polygonLatLng) && isFarEnough(lat, lng)) {
       points.push({
         lat,
         lng,
@@ -107,10 +117,11 @@ function generateHeatPointsForRegion(
   return points;
 }
 
-// Generate more heat points for all regions
+// Generate spaced-out heat points for all regions
 const heatPoints: HeatPoint[] = mockRegions.flatMap(
-  (region) => generateHeatPointsForRegion(region, 20) // 20 points per region
+  (region) => generateHeatPointsForRegion(region, 8) // Fewer points per region
 );
+
 // ...existing code...
 // Enhanced mock data generator with realistic tourist names
 function generateMockTourists(
