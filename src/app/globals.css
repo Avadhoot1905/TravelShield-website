@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --ts-primary: #118B50; /* primary */
+  --ts-secondary: #5DB996; /* secondary */
+  --ts-accent: #E3F0AF; /* accent */
+  --ts-cream: #FBF6E9; /* light background */
+  --ts-green: #10B981; /* green zone */
+  --ts-orange: #F59E0B; /* orange zone */
+  --ts-red: #EF4444; /* red zone */
 }
 
 @theme inline {
@@ -10,6 +17,14 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* expose custom palette to tailwind color utilities */
+  --color-primary: var(--ts-primary);
+  --color-secondary: var(--ts-secondary);
+  --color-accent: var(--ts-accent);
+  --color-cream: var(--ts-cream);
+  --color-green: var(--ts-green);
+  --color-orange: var(--ts-orange);
+  --color-red: var(--ts-red);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +38,253 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* TravelShield dashboard styles */
+.ts-sidebar {
+  width: 260px;
+  min-width: 220px;
+  border-right: 2px solid var(--ts-primary);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--ts-cream);
+  box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+}
+
+.ts-sidebar-title { 
+  font-size: 18px; 
+  font-weight: 700; 
+  color: var(--ts-primary);
+  margin-bottom: 8px;
+}
+
+.ts-actions { 
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap;
+}
+
+.ts-btn { 
+  padding: 10px 12px; 
+  border: 2px solid var(--ts-primary); 
+  background: var(--ts-accent); 
+  border-radius: 8px; 
+  cursor: pointer; 
+  font-weight: 600;
+  color: var(--ts-primary);
+  transition: all 0.2s ease;
+}
+
+.ts-btn:hover {
+  background: var(--ts-secondary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.ts-section { 
+  margin-top: 12px; 
+  padding: 8px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--ts-secondary);
+}
+
+.ts-section-title { 
+  font-size: 14px; 
+  font-weight: 600; 
+  color: var(--ts-primary);
+  margin-bottom: 8px;
+}
+
+.ts-card { 
+  padding: 12px; 
+  border: 1px solid var(--ts-accent); 
+  border-radius: 8px; 
+  background: var(--ts-cream);
+  color: var(--ts-primary);
+  font-weight: 500;
+}
+
+.ts-list { 
+  margin-top: 8px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 6px; 
+  max-height: 240px; 
+  overflow: auto; 
+}
+
+.ts-list-item { 
+  padding: 10px; 
+  border: 1px solid var(--ts-accent); 
+  border-radius: 8px; 
+  display: flex; 
+  justify-content: space-between; 
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.ts-list-item:hover {
+  background: var(--ts-accent);
+  transform: translateX(2px);
+}
+
+.ts-muted { 
+  color: var(--ts-secondary);
+  font-size: 12px;
+}
+
+/* Notification styles */
+.ts-notification-strip {
+  padding: 16px;
+  margin: 8px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid;
+}
+
+.ts-notification-strip:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.ts-notification-green {
+  background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+  border-left-color: var(--ts-green);
+  color: #064E3B;
+}
+
+.ts-notification-orange {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border-left-color: var(--ts-orange);
+  color: #92400E;
+}
+
+.ts-notification-red {
+  background: linear-gradient(135deg, #FEE2E2, #FECACA);
+  border-left-color: var(--ts-red);
+  color: #991B1B;
+}
+
+.ts-notification-info {
+  flex: 1;
+}
+
+.ts-notification-zone {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ts-notification-time {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+/* Modal styles */
+.ts-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.ts-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+.ts-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--ts-accent);
+}
+
+.ts-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ts-primary);
+}
+
+.ts-modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--ts-secondary);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.ts-modal-close:hover {
+  background: var(--ts-accent);
+  color: var(--ts-primary);
+}
+
+.ts-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.ts-detail-label {
+  font-weight: 600;
+  color: var(--ts-primary);
+  min-width: 120px;
+}
+
+.ts-detail-value {
+  color: var(--ts-secondary);
+  text-align: right;
+  flex: 1;
+}
+
+.ts-zone-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ts-zone-badge-green {
+  background: var(--ts-green);
+  color: white;
+}
+
+.ts-zone-badge-orange {
+  background: var(--ts-orange);
+  color: white;
+}
+
+.ts-zone-badge-red {
+  background: var(--ts-red);
+  color: white;
 }
